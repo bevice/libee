@@ -1,6 +1,6 @@
 # STM32 EEPROM emulation 
 
-##First: define sections in Linker file
+## First: define sections in a linker file
 ```
 # RAM Region
 
@@ -25,12 +25,12 @@
 
 
 ```
-##Second: Define EEMEM data
+## Second: Define EEMEM data
 ```
 #include <ee.h>
 EEMEM uint32_t eeprom_variable = 0x55abcdef;
 ```
 
-##Third: Load and save data
+## Third: Load and save data
 * ```eemem_load();``` loads data from __rom__ section to __ram__
 * ```eemem_save();``` saves data from __ram__ section to __rom__
