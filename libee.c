@@ -11,7 +11,7 @@ extern char __eeprom_end__;
 extern char __eepram_start__;
 extern char __eepram_end__;
 
-extern void *__FLASH_PAGE_SIZE__; // addr contents size
+extern void __FLASH_PAGE_SIZE__; // addr contents size
 
 
 void eemem_load() {
