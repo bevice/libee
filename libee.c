@@ -11,6 +11,9 @@ extern char __eeprom_end__;
 extern char __eepram_start__;
 extern char __eepram_end__;
 
+extern void * __FLASH_PAGE_SIZE__; // addr content size
+
+
 void eemem_load(){
 
     size_t size = &__eeprom_end__ - &__eeprom_start__;
@@ -25,7 +28,6 @@ void eemem_load(){
 void eemem_save(){
     FLASH->KEYR = FLASH_KEY1;
     FLASH->KEYR = FLASH_KEY2;
-//    #define FLASH_PAGE_SIZE 1024
     if(!(FLASH->CR  & FLASH_CR_LOCK)){
         // Сотрем все нахер
         char * ptr = &__eeprom_start__;
@@ -35,15 +37,12 @@ void eemem_save(){
             FLASH->AR = (uint32_t) (ptr);
             FLASH->CR |= FLASH_CR_STRT;
             while (FLASH->SR & FLASH_SR_BSY);
-            ptr+=FLASH_PAGE_SIZE;
+            ptr+=(uint32_t)(&__FLASH_PAGE_SIZE__);
         }
         FLASH->CR &= ~ FLASH_CR_PER;
         ee_memcpy(&__eeprom_start__, &__eepram_start__, &__eepram_end__ - &__eepram_start__);
         FLASH->CR |= FLASH_CR_LOCK; // заперли
     }
-
-    asm("nop");
-
 }
 
 

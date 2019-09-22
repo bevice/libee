@@ -1,20 +1,11 @@
 # STM32 EEPROM emulation 
 
 ## First: define sections in a linker file
+_Check ```__FLASH_PAGE_SIZE__``` value_
+
 ```
 # RAM Region
-
-	.eeprom-flash : {
-		. = ALIGN(1024);
-		__eeprom_start__ = .;
-        . += (__eepram_end__ - __eepram_start__);
-		__eeprom_end__ = .;
-		. = ALIGN(1024);
-		__eeprom_aligned_end__ = .;
-
-	} > ROM
-
-# AND ROM
+__FLASH_PAGE_SIZE__ = 1024;
 
     .eeprom : AT (__eeprom_start__) {
             __eepram_start__ = .;
@@ -23,6 +14,18 @@
     		__eepram_end__ = . ;
     } > RAM
 
+
+# AND ROM
+
+	.eeprom-flash : {
+		. = ALIGN(__FLASH_PAGE_SIZE__);
+		__eeprom_start__ = .;
+        . += (__eepram_end__ - __eepram_start__);
+		__eeprom_end__ = .;
+		. = ALIGN(__FLASH_PAGE_SIZE__);
+		__eeprom_aligned_end__ = .;
+
+	} > ROM
 
 ```
 ## Second: Define EEMEM data
