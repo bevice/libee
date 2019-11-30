@@ -31,7 +31,7 @@ void eemem_save() {
     if (!(FLASH->CR & FLASH_CR_LOCK)) {
         // Сотрем все нахер
         char *ptr = &__eeprom_start__;
-
+        FLASH->CR &= ~FLASH_CR_PG;
         while (ptr < &__eeprom_end__) {
             FLASH->CR |= FLASH_CR_PER;
             FLASH->AR = (uint32_t) (ptr);
@@ -55,4 +55,6 @@ void ee_memcpy(const void *dst, const void *src, size_t size) {
         while (FLASH->SR & FLASH_SR_BSY);
         *d++ = *s++;
     }
+    while (FLASH->SR & FLASH_SR_BSY);
+    FLASH->CR &= ~FLASH_CR_PG;
 }
